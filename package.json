@@ -1,0 +1,25 @@
+{
+  "name": "pw-practive-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng-serve",
+    "pageObjects-chrome": "npx playwright test usePgeObjects.spec.ts --project=chromium",
+    "pageObjects-firefox": "npx playwright test usePgeObjects.spec.ts --project=fiefox",
+    "pageObjects-all": "npm run pageObjects-chrome && npm run pageObjects-firefox",
+    "pageObjects-all-inparallel": "npm run pageObjects-chrome & npm run pageObjects-firefox",
+    "autoWait-dev": "URL= http://uitestingplayground.com/ajax npx playwright test autoWaiting.spec.ts --project=chromium"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@faker-js/faker": "^9.5.1",
+    "@playwright/test": "^1.51.0",
+    "@types/node": "^22.10.0",
+    "allure-playwright": "^3.2.0",
+    "dotenv": "^16.4.7"
+  }
+}

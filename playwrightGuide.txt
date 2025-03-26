@@ -1,0 +1,168 @@
+Para actualizar Playwright a la última versión, se puede usar el comando npm install -D @playwright/test@latest
+
+npx playwright test usePgeObjects.spec.ts --project=chromium  //to execute by the terminal the test in chromium
+
+npx playwright test usePgeObjects.spec.ts --project=firefox  //to execute by the terminal the test in firefox
+
+insted to write that long line of code I can use:
+npm scripts 
+they are in the package.json in the scripts section
+and I write in the terminal:
+npm run pageObjects-chrome
+or
+npm run pageObjects-all-inparallel
+
+
+To generate random data, use faker
+install it in the terminal with the command line: npm i @faker-js/faker --save-dev --force
+this libray is used in usePgeObjects.spec.ts
+
+
+Retries
+
+Retry OFF:
+
+Worker #1 -> New instance of the browser running in incgnite mode
+Test 1 - PASS
+Test 2 - PASS
+Test 3 - PASS
+--------------------
+Worker #1
+Test 1 - PASS
+Test 2 - FAIL
+Worker #2
+Test 3 - PASS
+
+--------------------
+Retry ON:
+
+Worker #1
+Test 1 - PASS
+Test 2 - FAIL
+Worker #2
+Test 2 - PASS
+Test 3 - PASS
+
+It is configured in the file playwright.config.ts in line:
+retries: process.env.CI ? 2 : 0,
+it is goinf to try to execute 2 time remotely if it fails but 0 in local
+we can change it to 1
+
+We can also configure it in the class in the test with the command: 
+test.describe.configure({retries: 2})
+
+and you can also add conditions when the retry is done:
+
+    test('Input Fields', async({page}, testInfo) => {   //add parameter testInfo in the method
+        if(testInfo.retry){
+            // do something, like delete data or preparate some data
+        }
+    })
+
+Parallel execution:
+We have 5 different test in the tests folder
+It is configured in the playwright.config.ts
+
+fullyParallel:true
+
+// with thi option it is going to take more time
+to use a single worker:
+  workers: process.env.CI ? 1 : 1, 
+
+
+in terminal:
+npm playwright test --project=chromium
+
+
+if you want to run in parallel the methods into a .spect.ts file
+
+add in the file before everthing
+
+test.describe.configure({mode: 'parallel'})
+
+if you have a test dependency you can also write into the test:
+
+test.describe.configure({mode: 'serial'})  -> it is going to be executed in order
+
+SCREENSHOTS AND RECORD VIDEOS
+In playwright.config.ts there is trace
+
+Add this command line after the validation of part that you want to take the SCREENSHOT:
+    await page.screenshot({path: 'screenshots/formsLayoutsPage.png'})
+
+Take screenshot in a specific part of a page:
+    await page.locator('nb-card', {hasText: "Inline form"}).screenshot({path: 'screenshot/inLineForm.png'})
+
+To save the screenshot in a constant:
+
+const buffer = await page.screenshot()
+console.log(buffer.toString('base64'))
+
+To record a video: 
+add in playwright.config.ts
+video: 'on'
+
+and execute in the terminal: npx playwright test usePageObjects.spec.ts -- project=chromium
+ from terminal you can also open it with: npx playwright show-report 
+
+ to set it a better resolucion:
+    video: {
+      mode: 'on',
+      size: {width: 1920, height:1080}
+    }
+
+ENVIRNOMENTS
+
+baseURL is set in playwright.config.ts with the link of the app and in the code you only write: '/'
+
+for different ENVIRNOMENTS
+
+look in playwright.config.ts in projects section
+
+and execute in the terminal:
+    npx playwright test usePgeObjects.spec.ts --project=dev
+
+To use an expecific env into a test we created a test-option.ts and we import it into 
+dragAndDropWithiIframes.spec.ts (to see example)
+
+Other option is with the .env file, this example was used with clase autoWaiting.spec.ts
+-> for this, download the library: dotenv npm: npm i dotenv
+
+Chose the env depending what is sent in the terminal:
+
+    //Execute a env depending the command that is sent as DEV = 1
+    baseURL: process.env.DEV ==='1' ? 'https://demoqa.com/automation-practice-form'
+          : process.env.STAGGING == '1' ? 'https://demostagging.com/automation-practice-form'
+          : 'https://demodev.com/automation-practice-form'
+
+terminal: DEV=1 npm playwright test usePageObjects.spec.ts --project=chromium
+
+
+run tes by tags
+example: @smoke
+Execute in the terminal:
+npx playwright test --project=chromium --grep @smoke
+
+I can also add 2 tags
+example @smoke @regression
+
+also an specific name
+@block
+
+Execute in the terminal:
+npx playwright test --project=chromium --grep "@smoke^@block"
+
+npx playwright test --project=chromium --grep "@smoke|@block"
+
+
+Allure    can be used for reports
+
+install
+npm i -D @playwright/test allure-playwright
+
+add allure in the cofig.ts
+and generate the results:
+
+allure generate allure-results -o allure-report --clean
+
+in the index.html we can see the r
