@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 
 test.describe('Form Layouts page', () => {
-    test.describe.configure({retries: 2})
+    test.describe.configure({retries: 0})
 
     test.beforeEach(async({page}) => {
         await page.goto('https://demo.applitools.com/');
@@ -32,17 +32,16 @@ test.describe('Form Layouts page', () => {
         const usingGridEmailInput = page.locator('#username').getByRole('textbox', {name: "Enter your username"});
     
         await usingGridEmailInput.getByLabel('Option 1').check({force: true});
-        
         await usingGridEmailInput.getByRole('radio', {name: "Option 1"}).check({force: true});
-
         const radioStatus = await usingGridEmailInput.getByRole('radio', {name: "Option 1"}).isChecked()
+        //await expect(usingGridEmailInput).toHaveScreenshot({maxDiffPixels: 150});
         expect(radioStatus).toBeTruthy();
         
         await expect(usingGridEmailInput.getByRole('radio', {name: "Option 1"})).toBeChecked();
 
         await usingGridEmailInput.getByRole('radio', {name: "Option 2"}).check({force: true});
         expect( await usingGridEmailInput.getByRole('radio', {name: "Option 1"}).isChecked()).toBeFalsy();
-        expect( await usingGridEmailInput.getByRole('radio', {name: "Option 1"}).isChecked()).toBeTruthy();
+        expect( await usingGridEmailInput.getByRole('radio', {name: "Option 1"}).isChecked()).toBeTruthy(); 
     });
 
 });

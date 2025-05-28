@@ -166,3 +166,4 @@ and generate the results:
 allure generate allure-results -o allure-report --clean
 
 in the index.html we can see the r
+

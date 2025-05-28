@@ -1,3 +1,4 @@
+import { EyesFixture } from '@applitools/eyes-playwright/fixture';
 import { defineConfig, devices } from '@playwright/test';
 import type {TestOptions} from './test-options';
 
@@ -13,7 +14,7 @@ require('dotenv').config();
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig<TestOptions>({
+export default defineConfig<EyesFixture>({
   //timeout: 10000,
   //globalTimeout:60000,
  /** expect:{
@@ -30,15 +31,35 @@ export default defineConfig<TestOptions>({
   workers: process.env.CI ? 1 : undefined,
 
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: ['html', 'allure-playwright']
-  /* it can also be: reporter: 'list', reporter: 'json', 
-  reporter: [['json', {outputFile: 'test-results/jsonResport.json'}]],
-  reporter: [['junit', {outputFile: 'test-results/junitReport.jxml'}]],*/
-  
+  //reporter: ['html', 'allure-playwright'],
+  // it can also be: reporter: 'list', reporter: 'json', 
+  reporter: [
+    ['json', {outputFile: 'test-results/jsonResport.json'}],
+    ['junit', {outputFile: 'test-results/junitReport.jxml'}],
+    ['allure-playwright'],
+    ['html']
+],  
 
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
+    /* Configuration for Eyes VisualAI */
+    eyesConfig: {
+      /* The following and other configuration parameters are documented at: https://applitools.com/tutorials/playwright/api/overview */
+      apiKey: 'camila-applotool-playwright', // alternatively, set this via environment variable APPLITOOLS_API_KEY
+      // serverUrl: 'https://eyes.applitools.com',
+
+      // failTestsOnDiff: false,
+      // appName: 'My App',
+      // matchLevel: 'Strict',
+      // batch: { name: 'My Batch' },
+      // proxy: {url: 'http://127.0.0.1:8888'},
+      // stitchMode: 'CSS',
+      // matchTimeout: 0,
+      // waitBeforeScreenshots: 50,
+      // saveNewTests: true,
+    },
+
     /* Base URL to use in actions like `await page.goto('/')`. */
     //baseURL: 'https://demoqa.com/automation-practice-form',
     globalsQAURL: 'https://demoglobalsqa.com/automation-practice-form',
