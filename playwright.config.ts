@@ -34,6 +34,16 @@ export default defineConfig<EyesFixture>({
   //reporter: ['html', 'allure-playwright'],
   // it can also be: reporter: 'list', reporter: 'json', 
   reporter: [
+    process.env.CI ? ["dot"] : ["list"],
+    [
+      "@argos-ci/playwright/reporter",
+      {
+        // Upload to Argos on CI only.
+        uploadToArgos: !!process.env.CI,
+        // Set your Argos token (required if not using GitHub Actions).
+        //token: "<YOUR-ARGOS-TOKEN>",
+      },
+    ],
     ['json', {outputFile: 'test-results/jsonResport.json'}],
     ['junit', {outputFile: 'test-results/junitReport.jxml'}],
     ['allure-playwright'],
@@ -70,6 +80,7 @@ export default defineConfig<EyesFixture>({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    screenshot: "only-on-failure",
     //actionTimeout: 5000,
     navigationTimeout: 5000,
     video: {

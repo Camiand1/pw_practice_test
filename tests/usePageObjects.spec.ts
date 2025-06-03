@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test'
 import { PageManager } from '../page-objects/pageManager'
 import {faker} from '@faker-js/faker'
+import { argosScreenshot } from "@argos-ci/playwright";
 
 test.beforeEach(async({page}) => {
     await page.goto('/')
@@ -15,13 +16,14 @@ test('navigate to form page @smoke', async({page}) => {
     await pm.navigateTo().alertsPage()
     await pm.navigateTo().framesPage()
     await pm.navigateTo().widgetsDatePickerPage()
+    await argosScreenshot(page, "homepage PM");
 })
 
 test('parametrized methods', async({page}) => {
     const pm = new PageManager(page)
     const randomFullName = faker.person.fullName({ sex: 'female'})
     const randomEmail = `${randomFullName.replace(' ', '')}${faker.number.int(1000)}@test.com`
-
+    await argosScreenshot(page, "parametrized methods");
     await pm.navigateTo().formLayoutsPage()
     await pm.onFormLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOption(process.env.USERNAME, 'Testing', 'Female')
     await page.screenshot({path: 'screenshots/formsLayoutsPage.png'})
@@ -40,12 +42,6 @@ test('date picker', async({page}) => {
     await pm.navigateTo().datePickerPage()
     await pm.onDatePikcerPage().selectCommonDatePickerDateFromToday(5)
     await pm.onDatePikcerPage().selectDatePickerWithRangeFromTOday(6, 15)
+    await argosScreenshot(page, "Date picker");
     
-})
-
-test.only('testing with argos CI', async({page}) => {
-
-    const pm = new PageManager(page)
-    await pm.navigateTo().formLayoutsPage()
-    await pm.navigateTo().datePickerPage()
 })
