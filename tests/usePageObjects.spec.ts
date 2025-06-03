@@ -42,3 +42,10 @@ test('date picker', async({page}) => {
     await pm.onDatePikcerPage().selectDatePickerWithRangeFromTOday(6, 15)
     
 })
+
+test.only('testing with argos CI', async({page}) => {
+
+    const pm = new PageManager(page)
+    await pm.navigateTo().formLayoutsPage()
+    await pm.navigateTo().datePickerPage()
+})
